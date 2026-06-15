@@ -2,6 +2,14 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/OrbitControls.js";
 import { GLTFLoader } from "three/addons/GLTFLoader.js";
 
+// Dynamically inject the ResponsiveVoice CDN library into the document head
+if (!document.getElementById('responsive-voice-script')) {
+  const script = document.createElement('script');
+  script.id = 'responsive-voice-script';
+  script.src = 'https://code.responsivevoice.org/responsivevoice.js?key=valid';
+  document.head.appendChild(script);
+}
+
 const MODEL_URL = encodeURI(
   "./Digestive system- stomach, liver, gall bladder, pancreas, small and large intestine .glb",
 );
@@ -386,6 +394,18 @@ let lastLabelGameFeedback = "";
 let currentAudio = null;
 let currentSpeechUtterance = null;
 let remoteAudioInstance = null;
+let systemVoices = [];
+
+// Asynchronously load and lock the voice array
+function loadVoices() {
+  if (typeof speechSynthesis !== 'undefined') {
+    systemVoices = window.speechSynthesis.getVoices();
+  }
+}
+if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+loadVoices();
 let audioSequence = 0;
 let lastAudioMode = "";
 let lastAudioError = "";
@@ -418,6 +438,9 @@ function getSpeechText(id) {
 async function speakText(textDescription, organId = null) {
   // Step 1: Immediate Silence & Reset
   window.speechSynthesis.cancel();
+  if (window.responsiveVoice) {
+    window.responsiveVoice.cancel();
+  }
   if (remoteAudioInstance) {
     remoteAudioInstance.pause();
     remoteAudioInstance.currentTime = 0;
@@ -454,15 +477,31 @@ async function speakText(textDescription, organId = null) {
     window.speechSynthesis.speak(utterance);
     return true;
   } else if (currentLanguage === "ta") {
-    lastAudioMode = "tamil_network";
-    const encodedText = encodeURIComponent(textDescription);
-    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ta&client=tw-ob&q=${encodedText}`;
+    let responsiveSuccess = false;
+    try {
+      if (window.responsiveVoice && typeof window.responsiveVoice.speak === "function" && window.responsiveVoice.voiceSupport("Tamil Female")) {
+        lastAudioMode = "responsive_voice";
+        window.responsiveVoice.speak(textDescription, "Tamil Female", { rate: 0.95, pitch: 1 });
+        responsiveSuccess = true;
+      }
+    } catch (error) {
+      console.error("Method A (ResponsiveVoice) failed, checking fallback:", error);
+      lastAudioError = `ResponsiveVoice failed: ${error.message}`;
+    }
 
-    remoteAudioInstance = new Audio(ttsUrl);
-    remoteAudioInstance.play().catch(error => {
-      console.error("Network audio playback failed, checking fallback:", error);
-      lastAudioError = `Network audio playback failed: ${error.message}`;
-    });
+    if (!responsiveSuccess) {
+      // Method B: Ultimate Fallback (Complete Audio Engine Rewrite)
+      lastAudioMode = "speech_fallback";
+      const utterance = new SpeechSynthesisUtterance(textDescription);
+      const tamilVoice = systemVoices.find(voice => voice.lang === 'ta-IN' || voice.lang.startsWith('ta'));
+      if (tamilVoice) {
+        utterance.voice = tamilVoice;
+        utterance.lang = 'ta-IN';
+      } else {
+        utterance.lang = 'ta';
+      }
+      window.speechSynthesis.speak(utterance);
+    }
     return true;
   }
   return false;
@@ -487,6 +526,10 @@ function stopCurrentAudio() {
     remoteAudioInstance.pause();
     remoteAudioInstance.currentTime = 0;
     remoteAudioInstance = null;
+  }
+
+  if (window.responsiveVoice) {
+    window.responsiveVoice.cancel();
   }
 
   if ("speechSynthesis" in window) {
@@ -1925,7 +1968,7 @@ if (window.innerWidth <= 760) {
 if ("speechSynthesis" in window) {
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = () => {
-    window.speechSynthesis.getVoices();
+    loadVoices();
   };
 }
 
