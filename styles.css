@@ -84,7 +84,9 @@ button {
 .error-banner,
 .side-panel,
 .organ-label,
-.quiz-panel {
+.quiz-panel,
+.scorecard-panel,
+.label-game-panel {
   border: 1px solid var(--line);
   background: var(--surface);
   -webkit-backdrop-filter: blur(18px);
@@ -157,6 +159,20 @@ button {
   cursor: pointer;
 }
 
+.menu-icon {
+  display: none;
+  width: 18px;
+  gap: 4px;
+}
+
+.menu-icon span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
 .toggle-closed,
 .side-panel.collapsed .toggle-open {
   display: none;
@@ -207,13 +223,16 @@ button {
 
 .control-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
 
 .control-button,
-.organ-menu button,
-.quiz-actions button {
+.organ-select,
+.speak-button,
+.quiz-actions button,
+.scorecard-actions button,
+#reset-label-game {
   min-height: 38px;
   border: 1px solid rgba(238, 246, 239, 0.14);
   border-radius: 8px;
@@ -227,14 +246,17 @@ button {
 }
 
 .control-button:hover,
-.organ-menu button:hover,
-.quiz-actions button:hover {
+.organ-select:hover,
+.speak-button:hover,
+.quiz-actions button:hover,
+.scorecard-actions button:hover,
+#reset-label-game:hover {
   border-color: rgba(86, 214, 197, 0.52);
   background: rgba(86, 214, 197, 0.1);
 }
 
 .control-button[aria-pressed="true"],
-.organ-menu button.active {
+.organ-select.active {
   border-color: rgba(86, 214, 197, 0.82);
   background: rgba(86, 214, 197, 0.16);
   color: #dffffa;
@@ -245,13 +267,77 @@ button {
   gap: 7px;
 }
 
-.organ-menu button {
+.organ-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  gap: 7px;
+}
+
+.organ-select {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   min-height: 36px;
   padding: 0 11px;
   text-align: left;
+}
+
+.speak-button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 38px;
+  padding: 0;
+}
+
+.speaker-icon {
+  position: relative;
+  width: 22px;
+  height: 18px;
+  color: currentColor;
+  overflow: visible;
+}
+
+.speaker-icon::before {
+  position: absolute;
+  left: 1px;
+  top: 5px;
+  width: 10px;
+  height: 8px;
+  background: currentColor;
+  clip-path: polygon(0 30%, 36% 30%, 100% 0, 100% 100%, 36% 70%, 0 70%);
+  content: "";
+}
+
+.sound-wave {
+  position: absolute;
+  border-color: currentColor;
+  border-style: solid;
+  border: 2px solid currentColor;
+  border-left: 0;
+  border-radius: 0 999px 999px 0;
+}
+
+.wave-1 {
+  left: 11px;
+  top: 6px;
+  width: 4px;
+  height: 6px;
+}
+
+.wave-2 {
+  left: 12px;
+  top: 3px;
+  width: 7px;
+  height: 12px;
+  opacity: 0.78;
+}
+
+.wave-3 {
+  left: 13px;
+  top: 0;
+  width: 10px;
+  height: 18px;
+  opacity: 0.58;
 }
 
 .status-strip {
@@ -270,12 +356,24 @@ button {
   width: min(330px, calc(100vw - 32px));
   padding: 14px 16px 15px;
   border-radius: 8px;
-  pointer-events: none;
+  pointer-events: auto;
+}
+
+.label-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .organ-label h2 {
+  flex: 1;
   font-size: 1.03rem;
   line-height: 1.15;
+}
+
+.label-speak {
+  min-width: 34px;
+  min-height: 34px;
 }
 
 .organ-label ul {
@@ -335,6 +433,137 @@ button {
   flex: 1;
 }
 
+.scorecard {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.scorecard-panel {
+  width: min(360px, calc(100vw - 32px));
+  padding: 18px;
+  border-radius: 8px;
+}
+
+.scorecard-panel p,
+.label-game-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.scorecard-panel h2 {
+  margin: 7px 0 8px;
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+#scorecard-message {
+  display: block;
+  color: #d9e8dd;
+  font-size: 0.94rem;
+  line-height: 1.35;
+}
+
+.scorecard-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.label-game-panel {
+  position: fixed;
+  left: 18px;
+  top: 18px;
+  z-index: 10;
+  width: min(350px, calc(100vw - 36px));
+  max-height: calc(100vh - 36px);
+  padding: 14px;
+  overflow: auto;
+  border-radius: 8px;
+}
+
+.label-game-header {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+#label-game-status {
+  color: #d9e8dd;
+  font-size: 0.9rem;
+  line-height: 1.32;
+}
+
+.tag-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.drag-tag {
+  min-height: 34px;
+  border: 1px solid rgba(238, 246, 239, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text);
+  cursor: grab;
+  font: inherit;
+  padding: 0 11px;
+  touch-action: none;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease;
+}
+
+.drag-tag:hover {
+  border-color: rgba(86, 214, 197, 0.52);
+  background: rgba(86, 214, 197, 0.1);
+}
+
+.drag-tag.is-dragging {
+  position: fixed;
+  z-index: 30;
+  cursor: grabbing;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.38);
+}
+
+.drag-tag.is-wrong {
+  animation: tag-bounce 420ms ease;
+  border-color: rgba(255, 111, 121, 0.7);
+}
+
+.placed-label-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.drag-tag.is-placed {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  border-color: rgba(90, 243, 138, 0.78);
+  background: rgba(37, 104, 60, 0.82);
+  box-shadow: 0 0 18px rgba(90, 243, 138, 0.35);
+  color: #effff3;
+  cursor: default;
+  pointer-events: none;
+}
+
+#reset-label-game {
+  width: 100%;
+}
+
 @keyframes pulse {
   0%,
   100% {
@@ -348,17 +577,51 @@ button {
   }
 }
 
+@keyframes tag-bounce {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  28% {
+    transform: translateX(-8px);
+  }
+
+  58% {
+    transform: translateX(8px);
+  }
+}
+
 @media (max-width: 760px) {
   .side-panel {
-    top: auto;
+    top: 10px;
     right: 10px;
-    bottom: 10px;
-    width: min(304px, calc(100vw - 20px));
-    max-height: min(58vh, 460px);
+    bottom: auto;
+    width: min(292px, calc(100vw - 20px));
+    max-height: min(72vh, calc(100vh - 20px));
   }
 
   .side-panel.collapsed {
-    width: 96px;
+    width: 46px;
+    max-height: 46px;
+  }
+
+  .side-panel.collapsed .panel-toggle {
+    border-bottom: 0;
+  }
+
+  .panel-toggle {
+    min-height: 44px;
+  }
+
+  .side-panel.collapsed .toggle-open,
+  .side-panel.collapsed .toggle-closed {
+    display: none;
+  }
+
+  .side-panel.collapsed .menu-icon {
+    display: inline-grid;
+    place-items: center;
   }
 
   .side-panel.collapsed .toggle-closed {
@@ -371,17 +634,27 @@ button {
   }
 
   .control-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .organ-menu {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 
-  .organ-menu button {
+  .organ-select {
     min-height: 34px;
     padding: 0 8px;
     font-size: 0.83rem;
+  }
+
+  .organ-row {
+    grid-template-columns: minmax(0, 1fr) 34px;
+    gap: 6px;
+  }
+
+  .speak-button {
+    min-width: 34px;
+    min-height: 34px;
   }
 
   .quiz-panel {
@@ -394,5 +667,49 @@ button {
     left: 10px;
     right: 10px;
     width: calc(100vw - 20px);
+    max-height: 24vh;
+    padding: 10px 12px;
+    overflow: auto;
+  }
+
+  .organ-label p {
+    font-size: 0.66rem;
+  }
+
+  .organ-label h2 {
+    font-size: 0.94rem;
+  }
+
+  .organ-label ul {
+    gap: 4px;
+    margin-top: 6px;
+    font-size: 0.82rem;
+    line-height: 1.24;
+  }
+
+  .label-title-row {
+    gap: 6px;
+  }
+
+  .label-speak {
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  .label-game-panel {
+    left: 10px;
+    top: 10px;
+    width: calc(100vw - 20px);
+    max-height: 38vh;
+  }
+
+  .drag-tag {
+    min-height: 32px;
+    padding: 0 9px;
+    font-size: 0.85rem;
+  }
+
+  .scorecard-actions {
+    grid-template-columns: 1fr;
   }
 }

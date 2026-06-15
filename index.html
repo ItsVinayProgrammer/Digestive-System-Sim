@@ -32,19 +32,23 @@
 
       <aside id="side-panel" class="side-panel" aria-label="Simulation controls">
         <button id="collapse-panel" class="panel-toggle" type="button" aria-label="Collapse panel">
+          <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
           <span class="toggle-open">Panel</span>
-          <span class="toggle-closed">Open</span>
+          <span class="toggle-closed">Menu</span>
         </button>
 
         <div class="panel-content">
           <header class="panel-header">
-            <p>Class 11 Biology</p>
+            <p>Class 10 Biology</p>
             <h1>Digestive System</h1>
           </header>
 
           <div class="control-grid" aria-label="Viewer tools">
             <button id="quiz-toggle" class="control-button" type="button" aria-pressed="false">
               Quiz
+            </button>
+            <button id="label-game-toggle" class="control-button" type="button" aria-pressed="false">
+              Labels
             </button>
             <button id="xray-toggle" class="control-button" type="button" aria-pressed="false">
               X-Ray
@@ -55,12 +59,42 @@
           </div>
 
           <section class="organ-menu" aria-label="Organs">
-            <button type="button" data-organ="liver">Liver</button>
-            <button type="button" data-organ="gallbladder">Gallbladder</button>
-            <button type="button" data-organ="stomach">Stomach</button>
-            <button type="button" data-organ="pancreas">Pancreas</button>
-            <button type="button" data-organ="smallIntestine">Small intestine</button>
-            <button type="button" data-organ="largeIntestine">Large intestine</button>
+            <div class="organ-row">
+              <button class="organ-select" type="button" data-organ="liver">Liver</button>
+              <button class="speak-button" type="button" data-speak-organ="liver" aria-label="Listen to Liver">
+                <span class="speaker-icon" aria-hidden="true"><span class="sound-wave wave-1"></span><span class="sound-wave wave-2"></span><span class="sound-wave wave-3"></span></span>
+              </button>
+            </div>
+            <div class="organ-row">
+              <button class="organ-select" type="button" data-organ="gallbladder">Gallbladder</button>
+              <button class="speak-button" type="button" data-speak-organ="gallbladder" aria-label="Listen to Gallbladder">
+                <span class="speaker-icon" aria-hidden="true"><span class="sound-wave wave-1"></span><span class="sound-wave wave-2"></span><span class="sound-wave wave-3"></span></span>
+              </button>
+            </div>
+            <div class="organ-row">
+              <button class="organ-select" type="button" data-organ="stomach">Stomach</button>
+              <button class="speak-button" type="button" data-speak-organ="stomach" aria-label="Listen to Stomach">
+                <span class="speaker-icon" aria-hidden="true"><span class="sound-wave wave-1"></span><span class="sound-wave wave-2"></span><span class="sound-wave wave-3"></span></span>
+              </button>
+            </div>
+            <div class="organ-row">
+              <button class="organ-select" type="button" data-organ="pancreas">Pancreas</button>
+              <button class="speak-button" type="button" data-speak-organ="pancreas" aria-label="Listen to Pancreas">
+                <span class="speaker-icon" aria-hidden="true"><span class="sound-wave wave-1"></span><span class="sound-wave wave-2"></span><span class="sound-wave wave-3"></span></span>
+              </button>
+            </div>
+            <div class="organ-row">
+              <button class="organ-select" type="button" data-organ="smallIntestine">Small intestine</button>
+              <button class="speak-button" type="button" data-speak-organ="smallIntestine" aria-label="Listen to Small intestine">
+                <span class="speaker-icon" aria-hidden="true"><span class="sound-wave wave-1"></span><span class="sound-wave wave-2"></span><span class="sound-wave wave-3"></span></span>
+              </button>
+            </div>
+            <div class="organ-row">
+              <button class="organ-select" type="button" data-organ="largeIntestine">Large intestine</button>
+              <button class="speak-button" type="button" data-speak-organ="largeIntestine" aria-label="Listen to Large intestine">
+                <span class="speaker-icon" aria-hidden="true"><span class="sound-wave wave-1"></span><span class="sound-wave wave-2"></span><span class="sound-wave wave-3"></span></span>
+              </button>
+            </div>
           </section>
 
           <section class="status-strip" aria-live="polite">
@@ -72,7 +106,12 @@
 
       <section id="organ-label" class="organ-label" hidden aria-live="polite">
         <p id="label-kicker"></p>
-        <h2 id="label-title"></h2>
+        <div class="label-title-row">
+          <h2 id="label-title"></h2>
+          <button id="label-speak" class="speak-button label-speak" type="button" aria-label="Listen to selected organ">
+            <span class="speaker-icon" aria-hidden="true"><span class="sound-wave wave-1"></span><span class="sound-wave wave-2"></span><span class="sound-wave wave-3"></span></span>
+          </button>
+        </div>
         <ul id="label-facts"></ul>
       </section>
 
@@ -88,6 +127,29 @@
           <button id="exit-quiz" type="button">Exit</button>
         </div>
       </section>
+
+      <section id="scorecard" class="scorecard" hidden role="dialog" aria-modal="true" aria-labelledby="scorecard-title">
+        <div class="scorecard-panel">
+          <p>Quiz complete</p>
+          <h2 id="scorecard-title">0/6 Correct!</h2>
+          <span id="scorecard-message">Try the quiz again to strengthen recall.</span>
+          <div class="scorecard-actions">
+            <button id="retry-quiz" type="button">Retry Quiz</button>
+            <button id="close-scorecard" type="button">Review Model</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="label-game-panel" class="label-game-panel" hidden aria-live="polite">
+        <div class="label-game-header">
+          <p>Labeling Game</p>
+          <span id="label-game-status">Drag each tag onto the matching organ.</span>
+        </div>
+        <div id="tag-tray" class="tag-tray" aria-label="Draggable organ labels"></div>
+        <button id="reset-label-game" type="button">Reset Labels</button>
+      </section>
+
+      <div id="placed-label-layer" class="placed-label-layer" aria-hidden="true"></div>
     </main>
 
     <script type="module" src="./app.js"></script>

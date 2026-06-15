@@ -13,6 +13,7 @@ const mimeTypes = new Map([
   [".js", "text/javascript; charset=utf-8"],
   [".mjs", "text/javascript; charset=utf-8"],
   [".glb", "model/gltf-binary"],
+  [".wav", "audio/wav"],
 ]);
 
 function isInsideRoot(filePath) {
