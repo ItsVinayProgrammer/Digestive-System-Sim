@@ -2,6 +2,9 @@
 
 An interactive 3D web-based anatomy learning application designed for Class 10 Biology education. This simulation features a real-time interactive Three.js 3D viewport, comprehensive Class 10 biology curriculum alignment, real-time Tamil localization, and interactive gamified assessments.
 
+<img width="1440" height="900" alt="image" src="https://github.com/user-attachments/assets/34ee413f-2fd6-440a-a230-dbd8284d661f" />
+
+
 ## Core Features
 
 * **Real-time 3D Viewport**: Full interaction (orbit, pan, zoom) with a detailed human digestive tract model powered by Three.js, OrbitControls, and GLTFLoader. Click to isolate or focus camera views on specific organs.
