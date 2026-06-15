@@ -79,4 +79,21 @@ node verify-render.mjs http://127.0.0.1:5173/
 
 ---
 
+## Deployment on Vercel
+
+This project is configured for seamless deployment on Vercel as a static site:
+
+1. **Auto-Configuration**: Vercel automatically detects the HTML entry point (`index.html`) and serves the static files.
+2. **Resource Caching & CORS**: A `vercel.json` configuration file is included to ensure:
+   - Proper MIME mapping for the 3D model (`model/gltf-binary`).
+   - CORS headers enabling remote asset loading.
+   - Long-term edge network caching for the 3D model and audio files for maximum page-load performance.
+
+To deploy:
+- Push your changes to GitHub.
+- Connect your GitHub repository in your Vercel Dashboard.
+- Click **Deploy** (no build command or output directory settings are required).
+
+---
+
 *Made with 💙 for premium interactive educational experiences.*
