@@ -385,7 +385,7 @@ let activeDrag = null;
 let lastLabelGameFeedback = "";
 let currentAudio = null;
 let currentSpeechUtterance = null;
-let currentTamilAudio = null;
+let remoteAudioInstance = null;
 let audioSequence = 0;
 let lastAudioMode = "";
 let lastAudioError = "";
@@ -415,55 +415,62 @@ function getSpeechText(id) {
   return info ? `${info.name}. ${info.description}` : "";
 }
 
-async function speakOrgan(id) {
-  const info = currentLanguage === "ta" ? organInfoTa[id] : organInfo[id];
-  const text = getSpeechText(id);
-  if (!info || !text) {
-    return false;
+async function speakText(textDescription, organId = null) {
+  // Step 1: Immediate Silence & Reset
+  window.speechSynthesis.cancel();
+  if (remoteAudioInstance) {
+    remoteAudioInstance.pause();
+    remoteAudioInstance.currentTime = 0;
+    remoteAudioInstance = null;
+  }
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
   }
 
-  stopCurrentAudio();
-  window.__SIM_LAST_SPOKEN__ = text;
-  lastAudioMode = "starting";
-  lastAudioError = "";
-
+  window.__SIM_LAST_SPOKEN__ = textDescription;
+  audioSequence += 1;
   const token = audioSequence;
 
-  if (currentLanguage === "ta") {
-    try {
-      const url = "https://translate.google.com/translate_tts?ie=UTF-8&tl=ta&client=tw-ob&q=" + encodeURIComponent(text);
-      const audio = new Audio(url);
-      currentTamilAudio = audio;
-      audio.play();
-      lastAudioMode = "tamil_network";
-      return true;
-    } catch (error) {
-      lastAudioError = `Tamil network audio failed: ${error.message}`;
-      lastAudioMode = "failed";
-      return false;
+  // Step 2: Check Active Language Condition
+  if (currentLanguage === "en") {
+    if (organId) {
+      const audioSource = await resolveAudioSource(organId, textDescription);
+      if (audioSource) {
+        try {
+          await playHtmlAudio(audioSource, token);
+          lastAudioMode = "html5";
+          return true;
+        } catch (error) {
+          lastAudioError = `HTML5 audio failed: ${error.message}`;
+        }
+      }
     }
-  }
 
-  const audioSource = await resolveAudioSource(id, text);
-  if (audioSource) {
-    try {
-      await playHtmlAudio(audioSource, token);
-      lastAudioMode = "html5";
-      return true;
-    } catch (error) {
-      lastAudioError = `HTML5 audio failed: ${error.message}`;
-    }
-  }
-
-  try {
-    await playSpeechFallback(text, token);
     lastAudioMode = "speech";
+    const utterance = new SpeechSynthesisUtterance(textDescription);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
     return true;
-  } catch (error) {
-    lastAudioMode = "failed";
-    lastAudioError = `Speech fallback failed: ${error.message}`;
-    return false;
+  } else if (currentLanguage === "ta") {
+    lastAudioMode = "tamil_network";
+    const encodedText = encodeURIComponent(textDescription);
+    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ta&client=tw-ob&q=${encodedText}`;
+
+    remoteAudioInstance = new Audio(ttsUrl);
+    remoteAudioInstance.play().catch(error => {
+      console.error("Network audio playback failed, checking fallback:", error);
+      lastAudioError = `Network audio playback failed: ${error.message}`;
+    });
+    return true;
   }
+  return false;
+}
+
+async function speakOrgan(id) {
+  const textDescription = getSpeechText(id);
+  return speakText(textDescription, id);
 }
 
 function stopCurrentAudio() {
@@ -476,10 +483,10 @@ function stopCurrentAudio() {
     currentAudio = null;
   }
 
-  if (currentTamilAudio) {
-    currentTamilAudio.pause();
-    currentTamilAudio.currentTime = 0;
-    currentTamilAudio = null;
+  if (remoteAudioInstance) {
+    remoteAudioInstance.pause();
+    remoteAudioInstance.currentTime = 0;
+    remoteAudioInstance = null;
   }
 
   if ("speechSynthesis" in window) {
@@ -1734,13 +1741,17 @@ langToggle.addEventListener("click", () => {
 speakButtons.forEach((button) => {
   button.addEventListener("click", (event) => {
     event.stopPropagation();
-    speakOrgan(button.dataset.speakOrgan);
+    const organId = button.dataset.speakOrgan;
+    const textDescription = getSpeechText(organId);
+    speakText(textDescription, organId);
   });
 });
 
 labelSpeak.addEventListener("click", (event) => {
   event.stopPropagation();
-  speakOrgan(labelSpeak.dataset.speakOrgan);
+  const organId = labelSpeak.dataset.speakOrgan;
+  const textDescription = getSpeechText(organId);
+  speakText(textDescription, organId);
 });
 
 organButtons.forEach((button) => {
@@ -1797,7 +1808,7 @@ window.__SIM_API__ = {
       lastSpoken: window.__SIM_LAST_SPOKEN__,
       lastAudioMode,
       lastAudioError,
-      currentAudioSrc: currentAudio?.currentSrc || currentAudio?.src || currentTamilAudio?.currentSrc || currentTamilAudio?.src || "",
+      currentAudioSrc: currentAudio?.currentSrc || currentAudio?.src || remoteAudioInstance?.currentSrc || remoteAudioInstance?.src || "",
       glassOrgans: [...glassOrgans],
       mappedOrgans: [...organGroups.keys()],
       labelVisible: !organLabel.hidden,
