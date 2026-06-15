@@ -84,6 +84,7 @@ const organInfo = {
     name: "Esophagus",
     kicker: "Food transport tube",
     aliases: ["esophagus", "beziercurve"],
+    audioSrc: "./assets/audio/esophagus.wav",
     description: "Moves food from the mouth to the stomach.",
     facts: ["Moves food from the pharynx to the stomach by peristalsis."],
     glassCapable: false,
@@ -472,6 +473,38 @@ function getSpeechText(id) {
   return info ? `${info.name}. ${info.description}` : "";
 }
 
+function getIndianFemaleVoice() {
+  if (!systemVoices || systemVoices.length === 0) {
+    if (typeof speechSynthesis !== 'undefined') {
+      systemVoices = window.speechSynthesis.getVoices();
+    }
+  }
+
+  // Filter for en-IN language code
+  const inEnVoices = systemVoices.filter(v => {
+    const l = (v.lang || "").toLowerCase();
+    return l === "en-in" || l.replace("_", "-").startsWith("en-in");
+  });
+
+  if (inEnVoices.length > 0) {
+    // Prefer female names/characteristics in en-IN voices
+    const femaleVoice = inEnVoices.find(v => {
+      const name = v.name.toLowerCase();
+      return name.includes("female") || name.includes("heera") || name.includes("veena") || name.includes("samira") || name.includes("priya") || name.includes("zira") || !name.includes("male");
+    });
+    return femaleVoice || inEnVoices[0];
+  }
+
+  // Fallback to any voice with "india" or "tamil" or "veena" in the name
+  const indiaVoice = systemVoices.find(v => {
+    const name = v.name.toLowerCase();
+    return name.includes("india") || name.includes("tamil") || name.includes("veena") || name.includes("heera");
+  });
+  if (indiaVoice) return indiaVoice;
+
+  return null;
+}
+
 async function speakText(textDescription, organId = null) {
   // Step 1: Immediate Silence & Reset
   window.speechSynthesis.cancel();
@@ -507,24 +540,40 @@ async function speakText(textDescription, organId = null) {
 
     lastAudioMode = "speech";
     const utterance = new SpeechSynthesisUtterance(textDescription);
-    utterance.lang = 'en-US';
+    const indianFemaleVoice = getIndianFemaleVoice();
+    if (indianFemaleVoice) {
+      utterance.voice = indianFemaleVoice;
+      utterance.lang = indianFemaleVoice.lang;
+    } else {
+      utterance.lang = 'en-IN';
+    }
     window.speechSynthesis.speak(utterance);
     return true;
   } else if (currentLanguage === "ta") {
-    // 1. Try ResponsiveVoice (Cloud high-quality voice)
-    try {
-      if (window.responsiveVoice && typeof window.responsiveVoice.speak === "function" && window.responsiveVoice.voiceSupport("Tamil Female")) {
-        lastAudioMode = "responsive_voice";
-        window.responsiveVoice.speak(textDescription, "Tamil Female", { rate: 0.95, pitch: 1 });
-        return true;
+    // 1. Try local HTML5 Audio first
+    if (organId) {
+      const audioSource = await resolveAudioSource(organId, textDescription);
+      if (audioSource) {
+        try {
+          await playHtmlAudio(audioSource, token);
+          lastAudioMode = "html5";
+          return true;
+        } catch (error) {
+          lastAudioError = `HTML5 audio failed: ${error.message}`;
+        }
       }
-    } catch (error) {
-      console.warn("ResponsiveVoice failed to speak, using speech synthesis fallback:", error);
-      lastAudioError = `ResponsiveVoice failed: ${error.message}`;
     }
 
-    // 2. Try native Tamil SpeechSynthesis
-    const tamilVoice = systemVoices.find(voice => voice.lang === 'ta-IN' || voice.lang.startsWith('ta'));
+    // 2. Try native Tamil SpeechSynthesis (Preferring female/non-male profiles)
+    const tamilVoice = systemVoices.find(voice => {
+      const l = (voice.lang || "").toLowerCase();
+      if (l === 'ta-in' || l.startsWith('ta')) {
+        const name = voice.name.toLowerCase();
+        return name.includes("female") || name.includes("heera") || name.includes("veena") || name.includes("samira") || name.includes("priya") || name.includes("zira") || !name.includes("male");
+      }
+      return false;
+    }) || systemVoices.find(voice => voice.lang === 'ta-IN' || voice.lang.startsWith('ta'));
+
     if (tamilVoice) {
       lastAudioMode = "speech";
       const utterance = new SpeechSynthesisUtterance(textDescription);
@@ -534,11 +583,66 @@ async function speakText(textDescription, organId = null) {
       return true;
     }
 
-    // 3. Fallback: use phonetic English translation to default English engine
+    // 3. Try Google Translate TTS proxy (High-quality network voice)
+    try {
+      lastAudioMode = "tamil_network";
+      const encodedText = encodeURIComponent(textDescription);
+      const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ta&client=tw-ob&q=${encodedText}`;
+      
+      const audio = new Audio(ttsUrl);
+      remoteAudioInstance = audio;
+      
+      await new Promise((resolve, reject) => {
+        if (token !== audioSequence) {
+          reject(new Error("Audio request was replaced."));
+          return;
+        }
+        
+        let settled = false;
+        const settle = (callback, value) => {
+          if (settled) return;
+          settled = true;
+          callback(value);
+        };
+        
+        audio.addEventListener("playing", () => settle(resolve, true), { once: true });
+        audio.addEventListener("ended", () => {
+          if (remoteAudioInstance === audio) {
+            remoteAudioInstance = null;
+          }
+        }, { once: true });
+        audio.addEventListener("error", () => settle(reject, new Error("Google TTS network audio failed.")), { once: true });
+        
+        audio.play().catch(reject);
+      });
+      return true;
+    } catch (error) {
+      lastAudioError = `Google TTS network audio failed: ${error.message}`;
+    }
+
+    // 4. Try ResponsiveVoice (Cloud voice)
+    try {
+      if (window.responsiveVoice && typeof window.responsiveVoice.speak === "function" && window.responsiveVoice.voiceSupport("Tamil Female")) {
+        lastAudioMode = "responsive_voice";
+        window.responsiveVoice.speak(textDescription, "Tamil Female", { rate: 0.95, pitch: 1 });
+        return true;
+      }
+    } catch (error) {
+      console.warn("ResponsiveVoice failed to speak:", error);
+      lastAudioError = `ResponsiveVoice failed: ${error.message}`;
+    }
+
+    // 5. Fallback: use phonetic English translation to default English engine
     lastAudioMode = "speech_phonetic_fallback";
     const phoneticText = getPhoneticText(textDescription);
     const utterance = new SpeechSynthesisUtterance(phoneticText);
-    utterance.lang = 'en-US';
+    const indianFemaleVoice = getIndianFemaleVoice();
+    if (indianFemaleVoice) {
+      utterance.voice = indianFemaleVoice;
+      utterance.lang = indianFemaleVoice.lang;
+    } else {
+      utterance.lang = 'en-IN';
+    }
     window.speechSynthesis.speak(utterance);
     return true;
   }
@@ -578,6 +682,7 @@ function stopCurrentAudio() {
 
 async function resolveAudioSource(id, text) {
   const info = currentLanguage === "ta" ? organInfoTa[id] : organInfo[id];
+  const baseInfo = organInfo[id];
   const provider = window.DigestiveAudioProvider;
 
   if (provider && typeof provider.getTrack === "function") {
@@ -597,12 +702,13 @@ async function resolveAudioSource(id, text) {
     }
   }
 
+  const baseSrc = baseInfo?.audioSrc || null;
   if (currentLanguage === "ta") {
-    const taSrc = info.audioSrc ? info.audioSrc.replace(".wav", "_ta.wav") : null;
+    const taSrc = baseSrc ? baseSrc.replace(".wav", "_ta.mp3") : null;
     return taSrc;
   }
 
-  return info.audioSrc;
+  return baseSrc;
 }
 
 function playHtmlAudio(src, token) {

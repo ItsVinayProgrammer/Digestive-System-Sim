@@ -1,27 +1,23 @@
-# 🫁 3D Digestive System Simulation (Interactive Learning)
+# Interactive 3D Digestive System Simulation
 
-Welcome to the **Interactive 3D Digestive System Simulation**! This premium web application is designed specifically for **Class 10 Biology** students and teachers, providing a stunning, immersive, and gamified anatomy learning platform. 
+An interactive 3D web-based anatomy learning application designed for Class 10 Biology education. This simulation features a real-time interactive Three.js 3D viewport, comprehensive Class 10 biology curriculum alignment, real-time Tamil localization, and interactive gamified assessments.
 
-It lets users interact with a high-fidelity 3D model, dynamically translate all text and audio resources into **Tamil**, test their knowledge using the interactive **Quiz**, and compete in a spatial **Anatomy Labeling Game**.
+## Core Features
 
----
-
-## 🌟 Key Features
-
-*   **🎮 Real-time 3D Viewport**: Explore the entire human digestive tract. Click, drag, rotate, zoom, and focus on individual organs (Stomach, Liver, Gallbladder, Pancreas, Small Intestine, Large Intestine, Esophagus) powered by **Three.js** and **OrbitControls**.
-*   **🌐 Real-time Tamil Localization (English / தமிழ்)**: Toggle languages instantly with the pulsing glassmorphic button in the top right corner. Every quiz prompt, organ description, labeling tag, and sidebar menu dynamically translates between English and Tamil.
-*   **🗣️ Dynamic Dual-Language Narration**: Read and listen to anatomical details. Narration automatically detects the selected language, selecting appropriate local audio files or falling back to natural voice profiles via the **Web Speech API (TTS)** in `en-IN` or `ta-IN` accents.
-*   **🏷️ Spatial Labeling Game**: Located independently on the left edge as a standalone action button (Play icon `▶`). Drag text tags from the drawer onto the corresponding 3D organ. Snaps precisely into place with a **Correct (Green)** or **Incorrect (Red)** outer emissive glow.
-*   **📝 Interactive Anatomy Quiz**: Tests students' structural recall. Features custom question counters, real-time score feeds, model selection validators, and a final grade scorecard.
-*   **⚡ Premium Micro-Animations**: Smooth camera pan-and-zoom transitions glide the camera to frame focused organs, while UI dialog panels scale and fade in elegantly.
+* **Real-time 3D Viewport**: Full interaction (orbit, pan, zoom) with a detailed human digestive tract model powered by Three.js, OrbitControls, and GLTFLoader. Click to isolate or focus camera views on specific organs.
+* **Dual-Language Narration System**: An integrated hybrid audio narration engine supporting both English and Tamil. The player prioritizes local high-quality audio files (.wav for English, .mp3 for Tamil) before falling back to browser-level speech synthesis or translation proxies.
+* **Bi-directional Tamil Localization**: Instantly translates all UI components, sidebar text, quiz questions, interactive labels, and narration between English and Tamil (Class 10 Biology Tamil Nadu State Board Curriculum standards).
+* **Interactive Anatomy Quiz**: Real-time evaluation of structural recall with target selection validators, question counters, score tracking feeds, and dynamic scorecard summaries.
+* **Spatial Labeling Game**: Interactive anatomy labeling drag-and-drop gameplay, featuring precise bounding box collision detection and snapping logic.
+* **X-Ray / Transparency View**: Toggle opacity layers on overlapping structural meshes (such as Liver and Stomach) to observe interior gastrointestinal structures.
 
 ---
 
-## 📐 Tamil Localization Matrix (Class 10 Biology)
+## Tamil Curriculum Localization Matrix
 
-All translations conform strictly to the Class 10 Biology curriculum:
+All translations conform strictly to the Class 10 Biology curriculum standards:
 
-| English Organ | Tamil translation | description / facts (தமிழ் விளக்கம்) |
+| English Organ | Tamil Translation | Description / Facts (தமிழ் விளக்கம்) |
 | :--- | :--- | :--- |
 | **Digestive System** | செரிமான மண்டலம் | - |
 | **Esophagus / Food Pipe** | உணவுப் பாதை / உமிழ்நீர் உறிஞ்சி | தொண்டையிலிருந்து உணவை அலைவியக்கத்தின் மூலம் இரைப்பைக்கு நகர்த்துகிறது. |
@@ -34,36 +30,46 @@ All translations conform strictly to the Class 10 Biology curriculum:
 
 ---
 
-## 🛠️ Technology Stack
+## Architecture of the Audio Player
 
-1.  **Frontend**: HTML5 Semantic markup, Modern CSS3 with custom variables, animations, and transitions.
-2.  **3D Rendering**: Three.js, OrbitControls, and GLTFLoader.
-3.  **Audio & Speech**: HTML5 Web Audio API and Web Speech Synthesis API.
-4.  **Testing Environment**: Node.js and headless Microsoft Edge remote debugger protocol.
+The Tamil and English narration system is built with a five-layer fallback pipeline to ensure cross-device compatibility and quality:
 
----
-
-## 🚀 Running Locally
-
-To avoid CORS restrictions when loading the 3D GLB model and audio tracks:
-
-1.  Clone the repository and navigate to the project directory.
-2.  Start the custom local web server:
-    ```bash
-    node dev-server.mjs
-    ```
-3.  Open the URL shown in your terminal (typically `http://127.0.0.1:5173/`) in Google Chrome or Microsoft Edge.
+1. **Local Assets**: Resolves static audio files from the `/assets/audio` directory (e.g. `./assets/audio/stomach_ta.mp3` or `./assets/audio/liver.wav`).
+2. **Native Speech Synthesis**: Detects local speech synthesis voice profiles in the client browser, selecting native Tamil/Indian English female voices.
+3. **Google Translate TTS Engine**: Dynamically queries Google's translation TTS engine over the network to generate human-like female pronunciations.
+4. **ResponsiveVoice API**: Interfaces with cloud-based ResponsiveVoice SDK using the 'Tamil Female' voice map.
+5. **Phonetic Speech Synthesis**: Fallback translation utilizing Romanized phonetic transcripts read through native Indian English voices.
 
 ---
 
-## 🧪 Running Automated Tests
+## Technology Stack
 
-A headless Edge verification suite is included to run automated end-to-end integration tests. It validates quiz scorecard transitions, labeling snap thresholds, responsiveness, and language settings:
+- **Graphics & Rendering**: Three.js, OrbitControls, GLTFLoader.
+- **Audio System**: HTML5 Web Audio API, Web Speech Synthesis API.
+- **Styling & Layout**: CSS Grid, Flexbox, Glassmorphic effects, CSS Transitions.
+- **Local Dev Server**: Node.js HTTP custom server module.
+- **Headless Edge CDP E2E Testing**: Node.js spawn wrapper driving Edge DevTools remote debugging protocol (Remote Debugger CDP).
+
+---
+
+## Installation & Running Locally
+
+Follow these steps to serve the simulation locally and bypass browser CORS restrictions:
+
+1. Ensure Node.js is installed on your system.
+2. Clone this repository and navigate to the project directory.
+3. Start the custom web server:
+   ```bash
+   node dev-server.mjs
+   ```
+4. Open the link displayed in your terminal (usually `http://127.0.0.1:5173/`) in Google Chrome or Microsoft Edge.
+
+---
+
+## Running Automated End-to-End Tests
+
+The repository contains an automated Edge remote-debugging script verifying layout viewport responsiveness, labeling game drag snapping, quiz scorecards, and language states:
 
 ```bash
 node verify-render.mjs http://127.0.0.1:5173/
 ```
-
----
-
-*Made with ❤️ for premium interactive educational experiences.*
