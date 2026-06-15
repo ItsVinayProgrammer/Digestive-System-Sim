@@ -503,26 +503,36 @@ async function speakText(textDescription, organId = null) {
     window.speechSynthesis.speak(utterance);
     return true;
   } else if (currentLanguage === "ta") {
-    // Dynamic scan for available Tamil native profile
-    const tamilVoice = systemVoices.find(voice => voice.lang === 'ta-IN' || voice.lang.startsWith('ta'));
-    
-    if (tamilVoice) {
-      lastAudioMode = "speech";
-      const utterance = new SpeechSynthesisUtterance(textDescription);
-      utterance.voice = tamilVoice;
-      utterance.lang = 'ta-IN';
-      window.speechSynthesis.speak(utterance);
-    } else {
-      // Fallback: use phonetic English translation to default English engine
-      lastAudioMode = "speech_phonetic_fallback";
-      const phoneticText = getPhoneticText(textDescription);
-      const utterance = new SpeechSynthesisUtterance(phoneticText);
-      utterance.lang = 'en-US';
-      window.speechSynthesis.speak(utterance);
-    }
+    lastAudioMode = "tamil_network";
+    const encodedText = encodeURIComponent(textDescription);
+    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ta&client=tw-ob&q=${encodedText}`;
+
+    remoteAudioInstance = new Audio(ttsUrl);
+    remoteAudioInstance.play().catch(error => {
+      console.warn("Network audio playback failed, checking fallback:", error);
+      lastAudioError = `Network audio playback failed: ${error.message}`;
+      playTamilSpeechSynthesis(textDescription);
+    });
     return true;
   }
   return false;
+}
+
+function playTamilSpeechSynthesis(textDescription) {
+  const tamilVoice = systemVoices.find(voice => voice.lang === 'ta-IN' || voice.lang.startsWith('ta'));
+  if (tamilVoice) {
+    lastAudioMode = "speech";
+    const utterance = new SpeechSynthesisUtterance(textDescription);
+    utterance.voice = tamilVoice;
+    utterance.lang = 'ta-IN';
+    window.speechSynthesis.speak(utterance);
+  } else {
+    lastAudioMode = "speech_phonetic_fallback";
+    const phoneticText = getPhoneticText(textDescription);
+    const utterance = new SpeechSynthesisUtterance(phoneticText);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
+  }
 }
 
 async function speakOrgan(id) {
