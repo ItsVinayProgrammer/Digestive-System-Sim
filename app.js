@@ -385,6 +385,7 @@ let activeDrag = null;
 let lastLabelGameFeedback = "";
 let currentAudio = null;
 let currentSpeechUtterance = null;
+let currentTamilAudio = null;
 let audioSequence = 0;
 let lastAudioMode = "";
 let lastAudioError = "";
@@ -427,6 +428,22 @@ async function speakOrgan(id) {
   lastAudioError = "";
 
   const token = audioSequence;
+
+  if (currentLanguage === "ta") {
+    try {
+      const url = "https://translate.google.com/translate_tts?ie=UTF-8&tl=ta&client=tw-ob&q=" + encodeURIComponent(text);
+      const audio = new Audio(url);
+      currentTamilAudio = audio;
+      audio.play();
+      lastAudioMode = "tamil_network";
+      return true;
+    } catch (error) {
+      lastAudioError = `Tamil network audio failed: ${error.message}`;
+      lastAudioMode = "failed";
+      return false;
+    }
+  }
+
   const audioSource = await resolveAudioSource(id, text);
   if (audioSource) {
     try {
@@ -457,6 +474,12 @@ function stopCurrentAudio() {
     currentAudio.removeAttribute("src");
     currentAudio.load();
     currentAudio = null;
+  }
+
+  if (currentTamilAudio) {
+    currentTamilAudio.pause();
+    currentTamilAudio.currentTime = 0;
+    currentTamilAudio = null;
   }
 
   if ("speechSynthesis" in window) {
@@ -1774,7 +1797,7 @@ window.__SIM_API__ = {
       lastSpoken: window.__SIM_LAST_SPOKEN__,
       lastAudioMode,
       lastAudioError,
-      currentAudioSrc: currentAudio?.currentSrc || currentAudio?.src || "",
+      currentAudioSrc: currentAudio?.currentSrc || currentAudio?.src || currentTamilAudio?.currentSrc || currentTamilAudio?.src || "",
       glassOrgans: [...glassOrgans],
       mappedOrgans: [...organGroups.keys()],
       labelVisible: !organLabel.hidden,
