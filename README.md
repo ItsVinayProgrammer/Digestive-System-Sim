@@ -73,3 +73,7 @@ The repository contains an automated Edge remote-debugging script verifying layo
 ```bash
 node verify-render.mjs http://127.0.0.1:5173/
 ```
+
+---
+
+*Made with ❤️ for premium interactive educational experiences.*
