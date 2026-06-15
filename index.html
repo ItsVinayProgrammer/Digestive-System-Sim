@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digestive System 3D Simulation</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three.module.js",
+          "three/addons/": "./vendor/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main id="app" aria-label="Interactive 3D digestive system simulation">
+      <canvas id="scene-canvas" aria-label="3D digestive system model"></canvas>
+
+      <svg id="leader-layer" aria-hidden="true">
+        <line id="leader-line" x1="0" y1="0" x2="0" y2="0"></line>
+        <circle id="leader-dot" cx="0" cy="0" r="4"></circle>
+      </svg>
+
+      <div id="loading-state" class="loading-state" role="status">
+        <span class="loading-mark"></span>
+        <span>Loading anatomy model</span>
+      </div>
+
+      <div id="error-banner" class="error-banner" hidden role="alert"></div>
+
+      <aside id="side-panel" class="side-panel" aria-label="Simulation controls">
+        <button id="collapse-panel" class="panel-toggle" type="button" aria-label="Collapse panel">
+          <span class="toggle-open">Panel</span>
+          <span class="toggle-closed">Open</span>
+        </button>
+
+        <div class="panel-content">
+          <header class="panel-header">
+            <p>Class 11 Biology</p>
+            <h1>Digestive System</h1>
+          </header>
+
+          <div class="control-grid" aria-label="Viewer tools">
+            <button id="quiz-toggle" class="control-button" type="button" aria-pressed="false">
+              Quiz
+            </button>
+            <button id="xray-toggle" class="control-button" type="button" aria-pressed="false">
+              X-Ray
+            </button>
+            <button id="reset-view" class="control-button" type="button">
+              Reset
+            </button>
+          </div>
+
+          <section class="organ-menu" aria-label="Organs">
+            <button type="button" data-organ="liver">Liver</button>
+            <button type="button" data-organ="gallbladder">Gallbladder</button>
+            <button type="button" data-organ="stomach">Stomach</button>
+            <button type="button" data-organ="pancreas">Pancreas</button>
+            <button type="button" data-organ="smallIntestine">Small intestine</button>
+            <button type="button" data-organ="largeIntestine">Large intestine</button>
+          </section>
+
+          <section class="status-strip" aria-live="polite">
+            <span id="active-organ">No organ selected</span>
+            <span id="xray-state">Solid view</span>
+          </section>
+        </div>
+      </aside>
+
+      <section id="organ-label" class="organ-label" hidden aria-live="polite">
+        <p id="label-kicker"></p>
+        <h2 id="label-title"></h2>
+        <ul id="label-facts"></ul>
+      </section>
+
+      <section id="quiz-panel" class="quiz-panel" hidden aria-live="polite">
+        <div class="quiz-meta">
+          <span id="quiz-count">Question 1</span>
+          <span id="quiz-score">Score 0</span>
+        </div>
+        <h2 id="quiz-question"></h2>
+        <p id="quiz-feedback">Click the matching organ in the 3D model.</p>
+        <div class="quiz-actions">
+          <button id="restart-quiz" type="button">Restart</button>
+          <button id="exit-quiz" type="button">Exit</button>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
