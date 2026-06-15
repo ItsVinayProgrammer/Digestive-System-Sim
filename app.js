@@ -547,6 +547,40 @@ function playHtmlAudio(src, token) {
   });
 }
 
+function showToast(message, duration = 3000) {
+  let toast = document.querySelector("#sim-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "sim-toast";
+    toast.style.position = "fixed";
+    toast.style.bottom = "28px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%) translateY(10px)";
+    toast.style.zIndex = "999";
+    toast.style.background = "rgba(17, 22, 20, 0.9)";
+    toast.style.border = "1px solid rgba(242, 184, 75, 0.4)";
+    toast.style.color = "#eef6ef";
+    toast.style.padding = "10px 18px";
+    toast.style.borderRadius = "8px";
+    toast.style.backdropFilter = "blur(18px)";
+    toast.style.boxShadow = "0 8px 32px rgba(0, 0, 0, 0.4)";
+    toast.style.fontSize = "0.9rem";
+    toast.style.opacity = "0";
+    toast.style.transition = "opacity 0.2s ease, transform 0.2s ease";
+    document.body.appendChild(toast);
+  }
+  
+  toast.textContent = message;
+  toast.style.opacity = "1";
+  toast.style.transform = "translateX(-50%) translateY(0)";
+  
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(-50%) translateY(10px)";
+  }, duration);
+}
+
 function playSpeechFallback(text, token) {
   return new Promise((resolve, reject) => {
     if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") {
@@ -562,13 +596,22 @@ function playSpeechFallback(text, token) {
     let settled = false;
     currentSpeechUtterance = utterance;
     if (currentLanguage === "ta") {
-      utterance.lang = "ta-IN";
+      let taVoice = null;
       if ("speechSynthesis" in window) {
         const voices = window.speechSynthesis.getVoices();
-        const taVoice = voices.find((v) => v.lang.startsWith("ta"));
-        if (taVoice) {
-          utterance.voice = taVoice;
-        }
+        // Force Tamil Voice Selection: Filter and assign where language contains 'ta'
+        taVoice = voices.find((v) => {
+          const l = (v.lang || "").toLowerCase();
+          return l === "ta-in" || l.includes("ta");
+        });
+      }
+      if (taVoice) {
+        utterance.lang = "ta-IN";
+        utterance.voice = taVoice;
+      } else {
+        console.warn("Tamil TTS voice profile not found. Falling back to default system voice.");
+        showToast("Tamil TTS voice not found. Using default voice fallback.");
+        utterance.lang = "en-IN"; // smoothly read using default system voice
       }
     } else {
       utterance.lang = "en-IN";
@@ -1660,6 +1703,7 @@ closeScorecard.addEventListener("click", stopQuiz);
 resetLabelGame.addEventListener("click", resetLabelGameRound);
 
 langToggle.addEventListener("click", () => {
+  stopCurrentAudio();
   currentLanguage = currentLanguage === "en" ? "ta" : "en";
   updateLanguageUI();
 });
