@@ -389,26 +389,26 @@ let remoteAudioInstance = null;
 let systemVoices = [];
 
 const phoneticFallbacks = {
-  "கல்லீரல். மிகப்பெரிய சுரப்பி. கொழுப்பைச் செரிக்க பித்தநீரைச் சுரக்கிறது.": 
-    "Kallīral. Miga periya surappi. Kozhuppai serikka pithaneerai surakkiradhu.",
-  "பித்தப்பை. பித்தநீரைத் தற்காலிகமாகச் சேமித்து வைக்கிறது.": 
-    "Pittappai. Pithaneerai tharkaligamaga semithu vaikkiradhu.",
   "இரைப்பை. தசைச்சுவர் உணவைக் கடைந்து கூழாக்குகிறது. புரதங்களைச் செரிக்க ஹைட்ரோகுளோரிக் அமிலம், பெப்சின், மற்றும் கோழை கொண்ட இரைப்பைச் சாற்றைச் சுரக்கிறது.": 
-    "Iraippai. Thaisaichuvar unavaik kadaindhu koozhakkugiradhu. Puradhangalai serikka hydrochloric amilam, pepsin, matrum kozhai konda iraippai saatrai surakkiradhu.",
+    "Iraippai. Thaisaichuvar unavai kadainthu koolaakkugirathu.",
+  "கல்லீரல். மிகப்பெரிய சுரப்பி. கொழுப்பைச் செரிக்க பித்தநீரைச் சுரக்கிறது.": 
+    "Kalleeral. Migaperiya surappi. Koluppai serikka pithaneerai surakkirathu.",
+  "பித்தப்பை. பித்தநீரைத் தற்காலிகமாகச் சேமித்து வைக்கிறது.": 
+    "Pithappai. Pithaneerai tharkaamali-gamaaga saemithu vaikkirathu.",
   "கணையம். கார்போஹைட்ரேட்டுகள், புரதங்கள் மற்றும் கொழுப்புகளை முழுமையாகச் செரிப்பதற்கான என்சைம்கள் கொண்ட கணையச் சாற்றைச் சுரக்கிறது.": 
-    "Kaṇaiyam. Carbohydrategal, puradhangal matrum kozhuppugalai muzhumaiyaga serippadharkana enzymes konda kaṇaiya saatrai surakkiradhu.",
+    "Kanaiyam. Serippatharkkaana enzymes konda kanaiya saatrai surakkirathu.",
   "சிறுகுடல். உணவு முழுமையாகச் செரிக்கும் இடம். குடலுறிஞ்சிகள் இரத்தத்தில் ஊட்டச்சத்துக்கள் அதிகபட்சமாக உறிஞ்சப்படுவதற்கான மேற்பரப்பை அதிகரிக்கின்றன.": 
-    "Ciṟukuṭal. Unavu muzhumaiyaga serikkum idam. Kudalurinjigal irathathil oottachathukal adhigabadchamaga urinjapaduvadharkana merparappai adhigarikkindrana.",
+    "Chirukudal. Unavu muzhumaiyaaga serikkum idam. Oottachathukkal urinjappadum.",
   "பெருங்குடல். செரிக்காத உணவிலிருந்து அதிகப்படியான நீரையும் தாதுக்களையும் உறிஞ்சி, திடக்கழிவை உருவாக்குகிறது.": 
-    "Peruṅkuṭal. Serikkadha unavilrundhu adhigapadiyaana neeraiyum thadhukalaiyum urinji, thidakazhivai uruvakkugiradhu.",
+    "Perungudal. Serikkaatha unavil-irunthu athiga-padiyaana neerai urinjugirathu.",
   "உணவுப் பாதை / உமிழ்நீர் உறிஞ்சி. தொண்டையிலிருந்து உணவை அலைவியக்கத்தின் மூலம் இரைப்பைக்கு நகர்த்துகிறது.": 
     "Unavu paadhai. Thondaiyilirundhu unavai alaiviyakathin moolam iraippaiki nagarthugiradhu.",
-  "கல்லீரல்": "Kallīral",
-  "பித்தப்பை": "Pittappai",
+  "கல்லீரல்": "Kalleeral",
+  "பித்தப்பை": "Pithappai",
   "இரைப்பை": "Iraippai",
-  "கணையம்": "Kaṇaiyam",
-  "சிறுகுடல்": "Ciṟukuṭal",
-  "பெருங்குடல்": "Peruṅkuṭal",
+  "கணையம்": "Kanaiyam",
+  "சிறுகுடல்": "Chirukudal",
+  "பெருங்குடல்": "Perungudal",
   "உணவுப் பாதை / உமிழ்நீர் உறிஞ்சி": "Unavu paadhai"
 };
 
