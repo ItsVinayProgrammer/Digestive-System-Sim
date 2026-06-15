@@ -2,14 +2,6 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/OrbitControls.js";
 import { GLTFLoader } from "three/addons/GLTFLoader.js";
 
-// Dynamically inject the ResponsiveVoice CDN library into the document head
-if (!document.getElementById('responsive-voice-script')) {
-  const script = document.createElement('script');
-  script.id = 'responsive-voice-script';
-  script.src = 'https://code.responsivevoice.org/responsivevoice.js?key=valid';
-  document.head.appendChild(script);
-}
-
 const MODEL_URL = encodeURI(
   "./Digestive system- stomach, liver, gall bladder, pancreas, small and large intestine .glb",
 );
@@ -396,6 +388,43 @@ let currentSpeechUtterance = null;
 let remoteAudioInstance = null;
 let systemVoices = [];
 
+const phoneticFallbacks = {
+  "கல்லீரல். மிகப்பெரிய சுரப்பி. கொழுப்பைச் செரிக்க பித்தநீரைச் சுரக்கிறது.": 
+    "Kallīral. Miga periya surappi. Kozhuppai serikka pithaneerai surakkiradhu.",
+  "பித்தப்பை. பித்தநீரைத் தற்காலிகமாகச் சேமித்து வைக்கிறது.": 
+    "Pittappai. Pithaneerai tharkaligamaga semithu vaikkiradhu.",
+  "இரைப்பை. தசைச்சுவர் உணவைக் கடைந்து கூழாக்குகிறது. புரதங்களைச் செரிக்க ஹைட்ரோகுளோரிக் அமிலம், பெப்சின், மற்றும் கோழை கொண்ட இரைப்பைச் சாற்றைச் சுரக்கிறது.": 
+    "Iraippai. Thaisaichuvar unavaik kadaindhu koozhakkugiradhu. Puradhangalai serikka hydrochloric amilam, pepsin, matrum kozhai konda iraippai saatrai surakkiradhu.",
+  "கணையம். கார்போஹைட்ரேட்டுகள், புரதங்கள் மற்றும் கொழுப்புகளை முழுமையாகச் செரிப்பதற்கான என்சைம்கள் கொண்ட கணையச் சாற்றைச் சுரக்கிறது.": 
+    "Kaṇaiyam. Carbohydrategal, puradhangal matrum kozhuppugalai muzhumaiyaga serippadharkana enzymes konda kaṇaiya saatrai surakkiradhu.",
+  "சிறுகுடல். உணவு முழுமையாகச் செரிக்கும் இடம். குடலுறிஞ்சிகள் இரத்தத்தில் ஊட்டச்சத்துக்கள் அதிகபட்சமாக உறிஞ்சப்படுவதற்கான மேற்பரப்பை அதிகரிக்கின்றன.": 
+    "Ciṟukuṭal. Unavu muzhumaiyaga serikkum idam. Kudalurinjigal irathathil oottachathukal adhigabadchamaga urinjapaduvadharkana merparappai adhigarikkindrana.",
+  "பெருங்குடல். செரிக்காத உணவிலிருந்து அதிகப்படியான நீரையும் தாதுக்களையும் உறிஞ்சி, திடக்கழிவை உருவாக்குகிறது.": 
+    "Peruṅkuṭal. Serikkadha unavilrundhu adhigapadiyaana neeraiyum thadhukalaiyum urinji, thidakazhivai uruvakkugiradhu.",
+  "உணவுப் பாதை / உமிழ்நீர் உறிஞ்சி. தொண்டையிலிருந்து உணவை அலைவியக்கத்தின் மூலம் இரைப்பைக்கு நகர்த்துகிறது.": 
+    "Unavu paadhai. Thondaiyilirundhu unavai alaiviyakathin moolam iraippaiki nagarthugiradhu.",
+  "கல்லீரல்": "Kallīral",
+  "பித்தப்பை": "Pittappai",
+  "இரைப்பை": "Iraippai",
+  "கணையம்": "Kaṇaiyam",
+  "சிறுகுடல்": "Ciṟukuṭal",
+  "பெருங்குடல்": "Peruṅkuṭal",
+  "உணவுப் பாதை / உமிழ்நீர் உறிஞ்சி": "Unavu paadhai"
+};
+
+function getPhoneticText(text) {
+  const cleanText = (text || "").trim();
+  if (phoneticFallbacks[cleanText]) {
+    return phoneticFallbacks[cleanText];
+  }
+  for (const [key, val] of Object.entries(phoneticFallbacks)) {
+    if (key.includes(cleanText) || cleanText.includes(key)) {
+      return val;
+    }
+  }
+  return cleanText;
+}
+
 // Asynchronously load and lock the voice array
 function loadVoices() {
   if (typeof speechSynthesis !== 'undefined') {
@@ -438,9 +467,6 @@ function getSpeechText(id) {
 async function speakText(textDescription, organId = null) {
   // Step 1: Immediate Silence & Reset
   window.speechSynthesis.cancel();
-  if (window.responsiveVoice) {
-    window.responsiveVoice.cancel();
-  }
   if (remoteAudioInstance) {
     remoteAudioInstance.pause();
     remoteAudioInstance.currentTime = 0;
@@ -477,29 +503,21 @@ async function speakText(textDescription, organId = null) {
     window.speechSynthesis.speak(utterance);
     return true;
   } else if (currentLanguage === "ta") {
-    let responsiveSuccess = false;
-    try {
-      if (window.responsiveVoice && typeof window.responsiveVoice.speak === "function" && window.responsiveVoice.voiceSupport("Tamil Female")) {
-        lastAudioMode = "responsive_voice";
-        window.responsiveVoice.speak(textDescription, "Tamil Female", { rate: 0.95, pitch: 1 });
-        responsiveSuccess = true;
-      }
-    } catch (error) {
-      console.error("Method A (ResponsiveVoice) failed, checking fallback:", error);
-      lastAudioError = `ResponsiveVoice failed: ${error.message}`;
-    }
-
-    if (!responsiveSuccess) {
-      // Method B: Ultimate Fallback (Complete Audio Engine Rewrite)
-      lastAudioMode = "speech_fallback";
+    // Dynamic scan for available Tamil native profile
+    const tamilVoice = systemVoices.find(voice => voice.lang === 'ta-IN' || voice.lang.startsWith('ta'));
+    
+    if (tamilVoice) {
+      lastAudioMode = "speech";
       const utterance = new SpeechSynthesisUtterance(textDescription);
-      const tamilVoice = systemVoices.find(voice => voice.lang === 'ta-IN' || voice.lang.startsWith('ta'));
-      if (tamilVoice) {
-        utterance.voice = tamilVoice;
-        utterance.lang = 'ta-IN';
-      } else {
-        utterance.lang = 'ta';
-      }
+      utterance.voice = tamilVoice;
+      utterance.lang = 'ta-IN';
+      window.speechSynthesis.speak(utterance);
+    } else {
+      // Fallback: use phonetic English translation to default English engine
+      lastAudioMode = "speech_phonetic_fallback";
+      const phoneticText = getPhoneticText(textDescription);
+      const utterance = new SpeechSynthesisUtterance(phoneticText);
+      utterance.lang = 'en-US';
       window.speechSynthesis.speak(utterance);
     }
     return true;
@@ -526,10 +544,6 @@ function stopCurrentAudio() {
     remoteAudioInstance.pause();
     remoteAudioInstance.currentTime = 0;
     remoteAudioInstance = null;
-  }
-
-  if (window.responsiveVoice) {
-    window.responsiveVoice.cancel();
   }
 
   if ("speechSynthesis" in window) {
