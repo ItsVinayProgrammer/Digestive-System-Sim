@@ -18,6 +18,14 @@
     <main id="app" aria-label="Interactive 3D digestive system simulation">
       <canvas id="scene-canvas" aria-label="3D digestive system model"></canvas>
 
+      <button id="lang-toggle" class="lang-toggle" type="button">English / தமிழ்</button>
+
+      <button id="label-game-toggle" class="play-button" type="button" aria-pressed="false" aria-label="Play labeling game">
+        <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+
       <svg id="leader-layer" aria-hidden="true">
         <line id="leader-line" x1="0" y1="0" x2="0" y2="0"></line>
         <circle id="leader-dot" cx="0" cy="0" r="4"></circle>
@@ -44,11 +52,8 @@
           </header>
 
           <div class="control-grid" aria-label="Viewer tools">
-            <button id="quiz-toggle" class="control-button" type="button" aria-pressed="false">
+            <button id="quiz-toggle" class="control-button" type="button" aria-pressed="false" style="grid-column: span 2;">
               Quiz
-            </button>
-            <button id="label-game-toggle" class="control-button" type="button" aria-pressed="false">
-              Labels
             </button>
             <button id="xray-toggle" class="control-button" type="button" aria-pressed="false">
               X-Ray

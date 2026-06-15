@@ -109,6 +109,163 @@ const quizQuestions = [
   },
 ];
 
+const organInfoTa = {
+  liver: {
+    name: "கல்லீரல்",
+    kicker: "மிகப்பெரிய சுரப்பி",
+    description: "மிகப்பெரிய சுரப்பி. கொழுப்பைச் செரிக்க பித்தநீரைச் சுரக்கிறது.",
+    facts: [
+      "மிகப்பெரிய சுரப்பி.",
+      "கொழுப்பைச் செரிக்க பித்தநீரைச் சுரக்கிறது."
+    ]
+  },
+  gallbladder: {
+    name: "பித்தப்பை",
+    kicker: "பித்தநீர் சேமிப்புப் பை",
+    description: "பித்தநீரைத் தற்காலிகமாகச் சேமித்து வைக்கிறது.",
+    facts: [
+      "பித்தநீரைத் தற்காலிகமாகச் சேமித்து வைக்கிறது."
+    ]
+  },
+  stomach: {
+    name: "இரைப்பை",
+    kicker: "தசையாலான செரிமான அறை",
+    description: "தசைச்சுவர் உணவைக் கடைந்து கூழாக்குகிறது. புரதங்களைச் செரிக்க ஹைட்ரோகுளோரிக் அமிலம், பெப்சின், மற்றும் கோழை கொண்ட இரைப்பைச் சாற்றைச் சுரக்கிறது.",
+    facts: [
+      "தசைச்சுவர் உணவைக் கடைந்து கூழாக்குகிறது.",
+      "புரதங்களைச் செரிக்க ஹைட்ரோகுளோரிக் அமிலம், பெப்சின், மற்றும் கோழை கொண்ட இரைப்பைச் சாற்றைச் சுரக்கிறது."
+    ]
+  },
+  pancreas: {
+    name: "கணையம்",
+    kicker: "செரிமான சுரப்பி",
+    description: "கார்போஹைட்ரேட்டுகள், புரதங்கள் மற்றும் கொழுப்புகளை முழுமையாகச் செரிப்பதற்கான என்சைம்கள் கொண்ட கணையச் சாற்றைச் சுரக்கிறது.",
+    facts: [
+      "கார்போஹைட்ரேட்டுகள், புரதங்கள் மற்றும் கொழுப்புகளை முழுமையாகச் செரிப்பதற்கான என்சைம்கள் கொண்ட கணையச் சாற்றைச் சுரக்கிறது."
+    ]
+  },
+  smallIntestine: {
+    name: "சிறுகுடல்",
+    kicker: "முழுமையான செரிமானம் மற்றும் உறிஞ்சுதல்",
+    description: "உணவு முழுமையாகச் செரிக்கும் இடம். குடலுறிஞ்சிகள் இரத்தத்தில் ஊட்டச்சத்துக்கள் அதிகபட்சமாக உறிஞ்சப்படுவதற்கான மேற்பரப்பை அதிகரிக்கின்றன.",
+    facts: [
+      "உணவு முழுமையாகச் செரிக்கும் இடம்.",
+      "குடலுறிஞ்சிகள் இரத்தத்தில் ஊட்டச்சத்துக்கள் அதிகபட்சமாக உறிஞ்சப்படுவதற்கான மேற்பரப்பை அதிகரிக்கின்றன."
+    ]
+  },
+  largeIntestine: {
+    name: "பெருங்குடல்",
+    kicker: "நீர் உறிஞ்சுதல்",
+    description: "செரிக்காத உணவிலிருந்து அதிகப்படியான நீரையும் தாதுக்களையும் உறிஞ்சி, திடக்கழிவை உருவாக்குகிறது.",
+    facts: [
+      "செரிக்காத உணவிலிருந்து அதிகப்படியான நீரையும் தாதுக்களையும் உறிஞ்சி, திடக்கழிவை உருவாக்குகிறது."
+    ]
+  },
+  esophagus: {
+    name: "உணவுப் பாதை / உமிழ்நீர் உறிஞ்சி",
+    kicker: "உணவு கடத்தும் குழாய்",
+    description: "தொண்டையிலிருந்து உணவை அலைவியக்கத்தின் மூலம் இரைப்பைக்கு நகர்த்துகிறது.",
+    facts: [
+      "தொண்டையிலிருந்து உணவை அலைவியக்கத்தின் மூலம் இரைப்பைக்கு நகர்த்துகிறது."
+    ]
+  }
+};
+
+const quizQuestionsTa = [
+  {
+    prompt: "பித்தநீரைத் தற்காலிகமாகச் சேமித்து வைக்கும் உறுப்பைக் கிளிக் செய்க.",
+    answer: "gallbladder",
+  },
+  {
+    prompt: "உணவைக் கடைந்து, இரைப்பைச் சாற்றைச் சுரக்கும் உறுப்பைக் கிளிக் செய்க.",
+    answer: "stomach",
+  },
+  {
+    prompt: "பித்தநீரைச் சுரக்கும் மிகப்பெரிய சுரப்பியைக் கிளிக் செய்க.",
+    answer: "liver",
+  },
+  {
+    prompt: "கணையச் சாற்றைச் சுரக்கும் உறுப்பைக் கிளிக் செய்க.",
+    answer: "pancreas",
+  },
+  {
+    prompt: "முழுமையான செரிமானம் நடைபெறும் மற்றும் குடலுறிஞ்சிகள் ஊட்டச்சத்துக்களை உறிஞ்சும் உறுப்பைக் கிளிக் செய்க.",
+    answer: "smallIntestine",
+  },
+  {
+    prompt: "அதிகப்படியான நீரை உறிஞ்சி, திடக்கழிவை உருவாக்கும் உறுப்பைக் கிளிக் செய்க.",
+    answer: "largeIntestine",
+  },
+];
+
+let currentLanguage = "en";
+
+function getQuizQuestions() {
+  return currentLanguage === "ta" ? quizQuestionsTa : quizQuestions;
+}
+
+function getOrganName(id) {
+  const info = currentLanguage === "ta" ? organInfoTa[id] : organInfo[id];
+  return info ? info.name : "";
+}
+
+function updateLanguageUI() {
+  const isEn = currentLanguage === "en";
+
+  document.querySelector(".panel-header p").textContent = isEn ? "Class 10 Biology" : "வகுப்பு 10 உயிரியல்";
+  document.querySelector(".panel-header h1").textContent = isEn ? "Digestive System" : "செரிமான மண்டலம்";
+
+  document.querySelector("#quiz-toggle").textContent = isEn ? "Quiz" : "வினாடி வினா";
+  document.querySelector("#xray-toggle").textContent = isEn ? "X-Ray" : "எக்ஸ்-ரே";
+  document.querySelector("#reset-view").textContent = isEn ? "Reset" : "மீட்டமை";
+
+  organButtons.forEach((button) => {
+    const organId = button.dataset.organ;
+    if (organId) {
+      button.textContent = getOrganName(organId);
+    }
+  });
+
+  speakButtons.forEach((button) => {
+    const organId = button.dataset.speakOrgan;
+    if (organId) {
+      button.setAttribute(
+        "aria-label",
+        isEn ? `Listen to ${getOrganName(organId)}` : `${getOrganName(organId)} உரையைக் கேள்`,
+      );
+    }
+  });
+
+  document.querySelector("#restart-quiz").textContent = isEn ? "Restart" : "மீண்டும் தொடங்கு";
+  document.querySelector("#exit-quiz").textContent = isEn ? "Exit" : "வெளியேறு";
+  if (quizActive) {
+    updateQuizPanel();
+  }
+
+  document.querySelector("#retry-quiz").textContent = isEn ? "Retry Quiz" : "மீண்டும் முயற்சி செய்";
+  document.querySelector("#close-scorecard").textContent = isEn ? "Review Model" : "மாதிரியை மீளாய்வு செய்";
+  if (!scorecard.hidden) {
+    showScorecard();
+  }
+
+  document.querySelector(".label-game-header p").textContent = isEn ? "Labeling Game" : "லேபிளிங் விளையாட்டு";
+  document.querySelector("#reset-label-game").textContent = isEn ? "Reset Labels" : "லேபிள்களை மீட்டமை";
+  if (labelGameActive) {
+    updateLabelGameStatus();
+    for (const [id, state] of labelGameState.entries()) {
+      if (state.element) {
+        state.element.textContent = getOrganName(id);
+      }
+    }
+  }
+
+  if (selectedOrgan) {
+    updateLabelContent();
+  }
+
+  updatePanelState();
+}
+
 const playableOrganIds = [
   "liver",
   "gallbladder",
@@ -119,6 +276,7 @@ const playableOrganIds = [
 ];
 
 const canvas = document.querySelector("#scene-canvas");
+const langToggle = document.querySelector("#lang-toggle");
 const leaderLayer = document.querySelector("#leader-layer");
 const leaderLine = document.querySelector("#leader-line");
 const leaderDot = document.querySelector("#leader-dot");
@@ -180,6 +338,12 @@ controls.dampingFactor = 0.08;
 controls.screenSpacePanning = true;
 controls.minPolarAngle = 0.06;
 controls.maxPolarAngle = Math.PI - 0.06;
+controls.update();
+
+controls.addEventListener("start", () => {
+  targetCameraPosition = null;
+  targetControlsTarget = null;
+});
 
 const hemiLight = new THREE.HemisphereLight(0xb9fff4, 0x2e1c16, 1.28);
 scene.add(hemiLight);
@@ -202,6 +366,9 @@ const viewHome = {
   position: new THREE.Vector3(0, 0, 8),
   target: new THREE.Vector3(),
 };
+
+let targetCameraPosition = null;
+let targetControlsTarget = null;
 
 let modelRoot = null;
 let modelCenter = new THREE.Vector3();
@@ -243,12 +410,12 @@ function identifyOrgan(value = "") {
 }
 
 function getSpeechText(id) {
-  const info = organInfo[id];
+  const info = currentLanguage === "ta" ? organInfoTa[id] : organInfo[id];
   return info ? `${info.name}. ${info.description}` : "";
 }
 
 async function speakOrgan(id) {
-  const info = organInfo[id];
+  const info = currentLanguage === "ta" ? organInfoTa[id] : organInfo[id];
   const text = getSpeechText(id);
   if (!info || !text) {
     return false;
@@ -299,7 +466,7 @@ function stopCurrentAudio() {
 }
 
 async function resolveAudioSource(id, text) {
-  const info = organInfo[id];
+  const info = currentLanguage === "ta" ? organInfoTa[id] : organInfo[id];
   const provider = window.DigestiveAudioProvider;
 
   if (provider && typeof provider.getTrack === "function") {
@@ -317,6 +484,11 @@ async function resolveAudioSource(id, text) {
     } catch (error) {
       lastAudioError = `External audio provider failed: ${error.message}`;
     }
+  }
+
+  if (currentLanguage === "ta") {
+    const taSrc = info.audioSrc ? info.audioSrc.replace(".wav", "_ta.wav") : null;
+    return taSrc;
   }
 
   return info.audioSrc;
@@ -389,7 +561,18 @@ function playSpeechFallback(text, token) {
     const utterance = new SpeechSynthesisUtterance(text);
     let settled = false;
     currentSpeechUtterance = utterance;
-    utterance.lang = "en-IN";
+    if (currentLanguage === "ta") {
+      utterance.lang = "ta-IN";
+      if ("speechSynthesis" in window) {
+        const voices = window.speechSynthesis.getVoices();
+        const taVoice = voices.find((v) => v.lang.startsWith("ta"));
+        if (taVoice) {
+          utterance.voice = taVoice;
+        }
+      }
+    } else {
+      utterance.lang = "en-IN";
+    }
     utterance.rate = 0.9;
     utterance.pitch = 1;
 
@@ -409,15 +592,22 @@ function playSpeechFallback(text, token) {
       }
     };
 
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-    window.setTimeout(() => {
-      if (!settled && window.speechSynthesis.speaking) {
-        settle(resolve, true);
-      } else if (!settled) {
-        reject(new Error("Speech did not start."));
-      }
-    }, 900);
+       window.speechSynthesis.cancel();
+       window.setTimeout(() => {
+         if (token !== audioSequence) {
+           reject(new Error("Speech request was replaced."));
+           return;
+         }
+         window.speechSynthesis.speak(utterance);
+         
+         window.setTimeout(() => {
+           if (!settled && window.speechSynthesis.speaking) {
+             settle(resolve, true);
+           } else if (!settled) {
+             reject(new Error("Speech did not start."));
+           }
+         }, 900);
+       }, 100);
   });
 }
 
@@ -673,6 +863,17 @@ function setSelectedOrgan(id, { fromMenu = false } = {}) {
   }
   if (selectedOrgan) {
     applyOrganVisuals(selectedOrgan);
+    
+    const group = organGroups.get(selectedOrgan);
+    if (group && !group.anchor.equals(new THREE.Vector3())) {
+      targetControlsTarget = group.anchor.clone();
+      
+      const offsetDir = camera.position.clone().sub(controls.target).normalize();
+      targetCameraPosition = group.anchor.clone().add(offsetDir.multiplyScalar(modelRadius * 1.6));
+    }
+  } else {
+    targetCameraPosition = viewHome.position.clone();
+    targetControlsTarget = viewHome.target.clone();
   }
 
   if (id && organInfo[id]?.glassCapable && !fromMenu) {
@@ -731,11 +932,15 @@ function updateLabelContent() {
     return;
   }
 
-  const info = organInfo[selectedOrgan];
+  const isEn = currentLanguage === "en";
+  const info = currentLanguage === "ta" ? organInfoTa[selectedOrgan] : organInfo[selectedOrgan];
   labelKicker.textContent = info.kicker;
   labelTitle.textContent = info.name;
   labelSpeak.dataset.speakOrgan = selectedOrgan;
-  labelSpeak.setAttribute("aria-label", `Listen to ${info.name}`);
+  labelSpeak.setAttribute(
+    "aria-label",
+    isEn ? `Listen to ${info.name}` : `${info.name} உரையைக் கேள்`
+  );
   labelFacts.replaceChildren(
     ...info.facts.map((fact) => {
       const item = document.createElement("li");
@@ -801,11 +1006,16 @@ function updateLeaderLine() {
 }
 
 function updatePanelState() {
-  const info = selectedOrgan ? organInfo[selectedOrgan] : null;
-  activeOrgan.textContent = info ? info.name : "No organ selected";
+  const isEn = currentLanguage === "en";
+  const info = selectedOrgan ? (currentLanguage === "ta" ? organInfoTa[selectedOrgan] : organInfo[selectedOrgan]) : null;
+  activeOrgan.textContent = info ? info.name : (isEn ? "No organ selected" : "உறுப்பு எதுவும் தேர்ந்தெடுக்கப்படவில்லை");
 
   const hasXray = glassOrgans.has("liver") || glassOrgans.has("stomach");
-  xrayState.textContent = hasXray ? "X-Ray active" : "Solid view";
+  if (hasXray) {
+    xrayState.textContent = isEn ? "X-Ray active" : "எக்ஸ்-ரே செயலில் உள்ளது";
+  } else {
+    xrayState.textContent = isEn ? "Solid view" : "திடக் காட்சி";
+  }
   xrayToggle.setAttribute("aria-pressed", String(glassOrgans.has("liver") && glassOrgans.has("stomach")));
   quizToggle.setAttribute("aria-pressed", String(quizActive));
   labelGameToggle.setAttribute("aria-pressed", String(labelGameActive));
@@ -877,7 +1087,7 @@ function findIntersectedOrgan(event) {
     .filter((id, index, ids) => id && ids.indexOf(id) === index);
 
   if (quizActive && !roundComplete) {
-    const answer = quizQuestions[quizIndex]?.answer;
+    const answer = getQuizQuestions()[quizIndex]?.answer;
     if (
       answer &&
       (hitIds.includes(answer) || isPointNearOrganAnchor(answer, event.clientX, event.clientY))
@@ -920,11 +1130,15 @@ function getPlacedLabelIds() {
 }
 
 function updateLabelGameStatus(message = "") {
+  const isEn = currentLanguage === "en";
   const placedCount = getPlacedLabelIds().length;
-  const fallback =
-    placedCount === playableOrganIds.length
-      ? "All labels are correctly placed."
-      : `${placedCount}/${playableOrganIds.length} labels placed.`;
+  const fallback = isEn
+    ? (placedCount === playableOrganIds.length
+        ? "All labels are correctly placed."
+        : `${placedCount}/${playableOrganIds.length} labels placed.`)
+    : (placedCount === playableOrganIds.length
+        ? "அனைத்து லேபிள்களும் சரியாக வைக்கப்பட்டுள்ளன."
+        : `${placedCount}/${playableOrganIds.length} லேபிள்கள் வைக்கப்பட்டுள்ளன.`);
   labelGameStatus.textContent = message || fallback;
   lastLabelGameFeedback = labelGameStatus.textContent;
 }
@@ -934,7 +1148,7 @@ function createLabelTag(id) {
   tag.type = "button";
   tag.className = "drag-tag";
   tag.dataset.labelOrgan = id;
-  tag.textContent = organInfo[id].name;
+  tag.textContent = currentLanguage === "ta" ? organInfoTa[id].name : organInfo[id].name;
   tag.addEventListener("pointerdown", startTagDrag);
   return tag;
 }
@@ -953,7 +1167,10 @@ function buildLabelGameTags() {
     tagTray.append(tag);
   }
 
-  updateLabelGameStatus("Drag each tag onto the matching organ.");
+  const initialMsg = currentLanguage === "en"
+    ? "Drag each tag onto the matching organ."
+    : "ஒவ்வொரு குறிச்சொல்லையும் அதற்குரிய உறுப்பின் மீது இழுத்து வைக்கவும்.";
+  updateLabelGameStatus(initialMsg);
 }
 
 function startLabelGame() {
@@ -1072,7 +1289,12 @@ function finishTagDrag(event) {
     flashOrgan(wrongTarget, "incorrect", 700);
   }
   returnTagToTray(drag, true);
-  updateLabelGameStatus(`Try again: ${organInfo[drag.organId].name} belongs on its own organ.`);
+  
+  const organName = currentLanguage === "ta" ? organInfoTa[drag.organId].name : organInfo[drag.organId].name;
+  const feedbackMsg = currentLanguage === "en"
+    ? `Try again: ${organName} belongs on its own organ.`
+    : `மீண்டும் முயற்சிக்கவும்: ${organName} அதற்குரிய உறுப்பில் இருக்க வேண்டும்.`;
+  updateLabelGameStatus(feedbackMsg);
 }
 
 function cancelTagDrag() {
@@ -1165,10 +1387,18 @@ function placeLabel(id, tag) {
   flashOrgan(id, "correct", 760);
   updatePlacedLabelPositions();
   const placedCount = getPlacedLabelIds().length;
+  const organName = currentLanguage === "ta" ? organInfoTa[id].name : organInfo[id].name;
+  const snappedMsg = currentLanguage === "en"
+    ? `${organName} snapped into place.`
+    : `${organName} சரியான இடத்தில் பொருந்தியது.`;
+  const allPlacedMsg = currentLanguage === "en"
+    ? "All labels are correctly placed."
+    : "அனைத்து லேபிள்களும் சரியாக வைக்கப்பட்டுள்ளன.";
+
   updateLabelGameStatus(
     placedCount === playableOrganIds.length
-      ? "All labels are correctly placed."
-      : `${organInfo[id].name} snapped into place.`,
+      ? allPlacedMsg
+      : snappedMsg,
   );
 }
 
@@ -1195,11 +1425,21 @@ function updatePlacedLabelPositions() {
 }
 
 function showScorecard() {
-  scorecardTitle.textContent = `${score}/${quizQuestions.length} Correct!`;
-  scorecardMessage.textContent =
-    score === quizQuestions.length
+  const isEn = currentLanguage === "en";
+  const questionsCount = getQuizQuestions().length;
+  scorecardTitle.textContent = isEn
+    ? `${score}/${questionsCount} Correct!`
+    : `${score}/${questionsCount} சரி!`;
+  
+  if (score === questionsCount) {
+    scorecardMessage.textContent = isEn
       ? "Excellent recall. Every organ was identified correctly."
-      : "Retry the quiz to strengthen the organs that need one more look.";
+      : "அருமையான நினைவாற்றல். அனைத்து உறுப்புகளும் சரியாகக் கண்டறியப்பட்டன.";
+  } else {
+    scorecardMessage.textContent = isEn
+      ? "Retry the quiz to strengthen the organs that need one more look."
+      : "மீண்டும் ஒரு முறை பார்க்க வேண்டிய உறுப்புகளை நினைவுபடுத்த வினாடி வினாவை மீண்டும் முயற்சிக்கவும்.";
+  }
   scorecard.hidden = false;
   quizPanel.hidden = true;
 }
@@ -1259,20 +1499,28 @@ function restartQuizRound() {
 
 function updateQuizPanel() {
   quizFeedback.className = "";
+  const isEn = currentLanguage === "en";
+  const questionsCount = getQuizQuestions().length;
 
   if (roundComplete) {
-    quizCount.textContent = "Round complete";
-    quizScore.textContent = `Score ${score}/${quizQuestions.length}`;
-    quizQuestion.textContent = "Quiz round complete.";
-    quizFeedback.textContent = "Review any missed organs, then restart the round.";
+    quizCount.textContent = isEn ? "Round complete" : "சுற்று முடிந்தது";
+    quizScore.textContent = isEn ? `Score ${score}/${questionsCount}` : `மதிப்பெண் ${score}/${questionsCount}`;
+    quizQuestion.textContent = isEn ? "Quiz round complete." : "வினாடி வினா சுற்று முடிந்தது.";
+    quizFeedback.textContent = isEn
+      ? "Review any missed organs, then restart the round."
+      : "தவறிய உறுப்புகளை மீளாய்வு செய்து, பின் சுற்றை மீண்டும் தொடங்கவும்.";
     return;
   }
 
-  const question = quizQuestions[quizIndex];
-  quizCount.textContent = `Question ${quizIndex + 1}/${quizQuestions.length}`;
-  quizScore.textContent = `Score ${score}`;
+  const question = getQuizQuestions()[quizIndex];
+  quizCount.textContent = isEn
+    ? `Question ${quizIndex + 1}/${questionsCount}`
+    : `கேள்வி ${quizIndex + 1}/${questionsCount}`;
+  quizScore.textContent = isEn ? `Score ${score}` : `மதிப்பெண் ${score}`;
   quizQuestion.textContent = question.prompt;
-  quizFeedback.textContent = "Click the matching organ in the 3D model.";
+  quizFeedback.textContent = isEn
+    ? "Click the matching organ in the 3D model."
+    : "3D மாதிரியில் அதற்குரிய உறுப்பைக் கிளிக் செய்க.";
 }
 
 function handleQuizAnswer(id) {
@@ -1280,17 +1528,21 @@ function handleQuizAnswer(id) {
     return;
   }
 
-  const question = quizQuestions[quizIndex];
+  const question = getQuizQuestions()[quizIndex];
   const isCorrect = id === question.answer;
   quizLocked = true;
+  const isEn = currentLanguage === "en";
 
   if (isCorrect) {
     score += 1;
-    quizFeedback.textContent = "Correct.";
+    quizFeedback.textContent = isEn ? "Correct." : "சரி.";
     quizFeedback.className = "correct";
     flashOrgan(id, "correct", 900);
   } else {
-    quizFeedback.textContent = `Not quite. The answer is ${organInfo[question.answer].name}.`;
+    const organName = currentLanguage === "ta" ? organInfoTa[question.answer].name : organInfo[question.answer].name;
+    quizFeedback.textContent = isEn
+      ? `Not quite. The answer is ${organName}.`
+      : `இல்லை. சரியான விடை ${organName}.`;
     quizFeedback.className = "incorrect";
     flashOrgan(id, "incorrect", 900);
     flashOrgan(question.answer, "correct", 900);
@@ -1299,7 +1551,8 @@ function handleQuizAnswer(id) {
   window.setTimeout(() => {
     quizIndex += 1;
     quizLocked = false;
-    if (quizIndex >= quizQuestions.length) {
+    const questionsCount = getQuizQuestions().length;
+    if (quizIndex >= questionsCount) {
       roundComplete = true;
       updateQuizPanel();
       showScorecard();
@@ -1406,6 +1659,11 @@ retryQuiz.addEventListener("click", restartQuizRound);
 closeScorecard.addEventListener("click", stopQuiz);
 resetLabelGame.addEventListener("click", resetLabelGameRound);
 
+langToggle.addEventListener("click", () => {
+  currentLanguage = currentLanguage === "en" ? "ta" : "en";
+  updateLanguageUI();
+});
+
 speakButtons.forEach((button) => {
   button.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -1447,6 +1705,12 @@ window.__SIM_API__ = {
   answerQuiz(id) {
     handleQuizAnswer(id);
   },
+  setLanguage(lang) {
+    if (lang === "en" || lang === "ta") {
+      currentLanguage = lang;
+      updateLanguageUI();
+    }
+  },
   getState() {
     return {
       ready: window.__SIM_READY__,
@@ -1471,16 +1735,23 @@ window.__SIM_API__ = {
       mappedOrgans: [...organGroups.keys()],
       labelVisible: !organLabel.hidden,
       quizVisible: !quizPanel.hidden,
+      language: currentLanguage,
     };
   },
   getScreenAnchor(id) {
     return getOrganScreenPoint(id);
   },
   rotateCameraForTest(radians = 0.18) {
+    targetCameraPosition = null;
+    targetControlsTarget = null;
     const offset = camera.position.clone().sub(controls.target);
     offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), radians);
     camera.position.copy(controls.target.clone().add(offset));
+    const dampingVal = controls.enableDamping;
+    controls.enableDamping = false;
     controls.update();
+    controls.enableDamping = dampingVal;
+    camera.updateMatrixWorld(true);
     updateLeaderLine();
   },
   getTagRect(id) {
@@ -1503,6 +1774,20 @@ window.__SIM_API__ = {
 
 function animate() {
   requestAnimationFrame(animate);
+  
+  if (targetCameraPosition && targetControlsTarget) {
+    camera.position.lerp(targetCameraPosition, 0.08);
+    controls.target.lerp(targetControlsTarget, 0.08);
+    
+    if (camera.position.distanceTo(targetCameraPosition) < 0.005 && 
+        controls.target.distanceTo(targetControlsTarget) < 0.005) {
+      camera.position.copy(targetCameraPosition);
+      controls.target.copy(targetControlsTarget);
+      targetCameraPosition = null;
+      targetControlsTarget = null;
+    }
+  }
+  
   controls.update();
   clampOrbitTarget();
   updateLeaderLine();
@@ -1557,6 +1842,13 @@ loader.load(
 
 if (window.innerWidth <= 760) {
   sidePanel.classList.add("collapsed");
+}
+
+if ("speechSynthesis" in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
 }
 
 syncPanelToggleLabel();

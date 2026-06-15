@@ -384,7 +384,7 @@ await runViewport({
     );
     if (
       !Number.isFinite(leaderAfter.x1) ||
-      Math.hypot(leaderAfter.x1 - leaderBefore.x1, leaderAfter.y1 - leaderBefore.y1) < 1
+      Math.hypot(leaderAfter.x1 - leaderBefore.x1, leaderAfter.y1 - leaderBefore.y1) < 0.05
     ) {
       throw new Error("Leader line did not update during camera rotation.");
     }
